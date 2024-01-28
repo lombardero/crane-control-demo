@@ -1,0 +1,14 @@
+{
+    "axis_distances": {
+        "swing_to_elbow": 100,
+        "elbow_to_wrist": 100,
+        "wrist_to_gripper": 20
+    },
+    "geometry": {
+        "torso": {
+            "height": 400,
+            "min_height": 100
+        },
+        "width": 20
+    }
+}

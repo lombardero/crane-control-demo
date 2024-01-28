@@ -8,7 +8,26 @@
   </head>
   <body>
     <div id="app"></div>
-    <canvas class="webgl" ></canvas>
+    <canvas class="webgl"></canvas>
     <script type="module" src="/src/main.ts"></script>
+    <div class="firstForm">
+      <form id="forward-kin-form">
+        <h3>Forward kinematics control</h3>
+        Swing rotation: <input type="number" name="swing"><br>
+        Elbow rotation: <input type="number" name="elbow"><br>
+        Wrist rotation: <input type="number" name="wrist"><br>
+        <input type="submit" value="Submit">
+      </form>
+    </div>
+    <div class="secondForm">
+      <form id="reverse-kin-form">
+        <h3>Reverse kinematics control</h3>
+        <p>Gripper position from base (mm):</p>
+        x: <input type="number" name="x"><br>
+        y: <input type="number" name="y"><br>
+        z: <input type="number" name="z"><br>
+        <input type="submit" value="Submit">
+      </form>
+    </div>
   </body>
 </html>
