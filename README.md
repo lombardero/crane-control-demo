@@ -3,6 +3,7 @@
 - [Robotic arm interface control](#robotic-arm-interface-control)
   - [Actions](#actions)
   - [Running](#running)
+  - [Run the tests](#run-the-tests)
 
 
 Demo user interface controlling a robotic arm of three degrees of liberty:
@@ -30,13 +31,19 @@ The user interface allows the user to control the robot in two manners:
 ## Running
 
 Install dependencies:
-```
+```sh
 $ npm install
 ```
 
 Run the code:
-```
+```sh
 $ npm run dev
 ```
 - The project will be running in `localhost:5173`
 
+
+## Run the tests
+
+```sh
+$ npm test
+```

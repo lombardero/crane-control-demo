@@ -1,15 +1,13 @@
 import { Point, Vector } from "./geometry";
-import { RobotControl } from "./robot_controller";
+import { RobotControl } from "../robot_controller";
 
-export class RobotGeometry {
+class RobotGeometry {
   swingToElbow: number;
   elbowToWrist: number;
   wristToGripper: number;
 
   thickness: number;
-
   torsoHeight: number;
-
   minHeight: number;
 
   constructor(
@@ -102,7 +100,7 @@ class RoboticArm {
   }
 }
 
-export class RobotGeometryCalculator implements RobotControl {
+class RobotPositionCalculator implements RobotControl {
   arm: RoboticArm;
   forearm: RoboticArm;
   hand: RoboticArm;
@@ -116,71 +114,64 @@ export class RobotGeometryCalculator implements RobotControl {
     this.forearm.attach(this.hand);
   }
 
+  static loadFromGeometry(
+    robotGeometry: RobotGeometry
+  ): RobotPositionCalculator {
+    const arm = new RoboticArm(
+      new Point(0, 0, robotGeometry.minHeight),
+      new Point(0, robotGeometry.swingToElbow, robotGeometry.minHeight)
+    );
+    const forearm = new RoboticArm(
+      new Point(
+        0,
+        robotGeometry.swingToElbow,
+        robotGeometry.minHeight - robotGeometry.thickness
+      ),
+      new Point(
+        0,
+        robotGeometry.swingToElbow + robotGeometry.elbowToWrist,
+        robotGeometry.minHeight - robotGeometry.thickness
+      )
+    );
+    const hand = new RoboticArm(
+      new Point(
+        0,
+        robotGeometry.swingToElbow + robotGeometry.elbowToWrist,
+        robotGeometry.minHeight - 2 * robotGeometry.thickness
+      ),
+      new Point(
+        0,
+        robotGeometry.swingToElbow +
+          robotGeometry.elbowToWrist +
+          robotGeometry.wristToGripper,
+        robotGeometry.minHeight - 2 * robotGeometry.thickness
+      )
+    );
+    return new RobotPositionCalculator(arm, forearm, hand);
+  }
+
   moveLift(distance: number) {
     this.arm.move(new Vector(0, 0, distance));
   }
 
   rotateSwing(angle: number) {
     this.arm.rotateZ(angle);
-    console.log(`Rotate swign ${angle}`);
     this.getGripperCoordinates();
   }
 
   rotateElbow(angle: number) {
     this.forearm.rotateZ(angle);
-    console.log(`Rotate elbow ${angle}`);
     this.getGripperCoordinates();
   }
 
   rotateWrist(angle: number) {
     this.hand.rotateZ(angle);
-    console.log(`Rotate wrist ${angle}`);
     this.getGripperCoordinates();
   }
 
   getGripperCoordinates(): number[] {
-    // console.log(this.arm.start.getAsList());
-    // console.log(this.arm.end.getAsList());
-    // console.log(this.forearm.start.getAsList());
-    // console.log(this.forearm.end.getAsList());
-    // console.log(this.hand.start.getAsList());
-    // console.log(this.hand.end.getAsList());
     return this.hand.end.getAsList();
   }
 }
 
-export function loadGeometryCalculatorfromRobotGeometry(
-  robotGeometry: RobotGeometry
-): RobotGeometryCalculator {
-  const arm = new RoboticArm(
-    new Point(0, 0, robotGeometry.minHeight),
-    new Point(0, robotGeometry.swingToElbow, robotGeometry.minHeight)
-  );
-  const forearm = new RoboticArm(
-    new Point(
-      0,
-      robotGeometry.swingToElbow,
-      robotGeometry.minHeight - robotGeometry.thickness
-    ),
-    new Point(
-      0,
-      robotGeometry.swingToElbow + robotGeometry.elbowToWrist,
-      robotGeometry.minHeight - robotGeometry.thickness
-    )
-  );
-  const hand = new RoboticArm(
-    new Point(
-      0,
-      robotGeometry.swingToElbow + robotGeometry.elbowToWrist,
-      robotGeometry.minHeight - 2 * robotGeometry.thickness
-    ),
-    new Point(
-      0,
-      robotGeometry.swingToElbow +
-        robotGeometry.elbowToWrist +
-        robotGeometry.wristToGripper,
-      robotGeometry.minHeight - 2 * robotGeometry.thickness
-    )
-  );
-  return new RobotGeometryCalculator(arm, forearm, hand);
-}
+export { RobotGeometry, RobotPositionCalculator };

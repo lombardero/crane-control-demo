@@ -1,8 +1,10 @@
-import { RobotGeometry, RobotGeometryCalculator } from "./robot_geometry";
+import {
+  RobotGeometry,
+  RobotPositionCalculator,
+} from "./geometry/robot_geometry";
 import { RobotRender } from "./robot_renderer";
-import { loadGeometryCalculatorfromRobotGeometry } from "./robot_geometry";
-import { InverseKinematicsCalculator } from "./robot_inverse_kinematics";
-import { Point } from "./geometry";
+import { InverseKinematicsCalculator } from "./geometry/inverse_kinematics";
+import { Point } from "./geometry/geometry";
 
 export interface RobotControl {
   moveLift(distance: number): void;
@@ -54,13 +56,14 @@ export class RobotController
   implements RobotForwardInstructions, RobotReverseInstructions
 {
   currentPosition: RobotPosition;
-  geometryCalculator: RobotGeometryCalculator;
+  geometryCalculator: RobotPositionCalculator;
   inverseKinematicsCalculator: InverseKinematicsCalculator;
   render: RobotRender;
 
   constructor(geometry: RobotGeometry) {
     this.currentPosition = new RobotPosition();
-    this.geometryCalculator = loadGeometryCalculatorfromRobotGeometry(geometry);
+    this.geometryCalculator =
+      RobotPositionCalculator.loadFromGeometry(geometry);
     this.inverseKinematicsCalculator = new InverseKinematicsCalculator(
       geometry
     );

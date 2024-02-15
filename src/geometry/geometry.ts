@@ -12,12 +12,10 @@ export class Point {
   rotateZ(angle: number, center: Point): void {
     const relativeX = this.x - center.x;
     const relativeY = this.y - center.y;
-
     const newRelativeX =
-      relativeX * Math.cos(angle) - relativeY * Math.sin(angle);
+      relativeX * Math.cos(angle) + relativeY * Math.sin(angle);
     const newRelativeY =
-      relativeX * Math.sin(angle) + relativeY * Math.cos(angle);
-
+      -relativeX * Math.sin(angle) + relativeY * Math.cos(angle);
     this.x = center.x + newRelativeX;
     this.y = center.y + newRelativeY;
   }

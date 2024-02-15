@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { RobotControl } from "./robot_controller";
-import { RobotGeometry } from "./robot_geometry";
+import { RobotGeometry } from "./geometry/robot_geometry";
 
 export class RobotRender implements RobotControl {
   torso: THREE.Mesh;

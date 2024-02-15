@@ -1,5 +1,5 @@
 import * as config from "./robot_geometry.json";
-import { RobotGeometry } from "./robot_geometry";
+import { RobotGeometry } from "./geometry/robot_geometry";
 import { RobotController } from "./robot_controller";
 import { RobotInputController } from "./input_parser";
 

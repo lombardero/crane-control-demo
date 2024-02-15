@@ -1,5 +1,5 @@
 import { RobotController, RobotPosition } from "./robot_controller";
-import { Point } from "./geometry";
+import { Point } from "./geometry/geometry";
 
 type FormCallable = (formInput: number[]) => void;
 
