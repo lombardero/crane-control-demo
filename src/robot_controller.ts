@@ -1,6 +1,8 @@
 import { RobotGeometry, RobotGeometryCalculator } from "./robot_geometry";
 import { RobotRender } from "./robot_renderer";
 import { loadGeometryCalculatorfromRobotGeometry } from "./robot_geometry";
+import { InverseKinematicsCalculator } from "./robot_inverse_kinematics";}
+import { Point } from "./geometry";
 
 export interface RobotControl {
   moveLift(distance: number): void;
@@ -40,18 +42,26 @@ export class RobotPosition {
   }
 }
 
-interface RobotInstruction {
+interface RobotForwardInstructions {
   setPosition(positiom: RobotPosition): void;
 }
 
-export class RobotController implements RobotInstruction {
+interface RobotReverseInstructions {
+  reach(gripperPosition: Point, gripperAlignmentAngle: number): void;
+}
+
+export class RobotController
+  implements RobotForwardInstructions, RobotReverseInstructions
+{
   currentPosition: RobotPosition;
   geometryCalculator: RobotGeometryCalculator;
+  inverseKinematicsCalculator: InverseKinematicsCalculator;
   render: RobotRender;
 
   constructor(geometry: RobotGeometry) {
     this.currentPosition = new RobotPosition();
     this.geometryCalculator = loadGeometryCalculatorfromRobotGeometry(geometry);
+    this.inverseKinematicsCalculator = new InverseKinematicsCalculator(geometry)
     this.render = new RobotRender(geometry);
   }
 
@@ -66,6 +76,13 @@ export class RobotController implements RobotInstruction {
     this.rotateElbow(deltaPosition.elbow);
     this.rotateWrist(deltaPosition.wrist);
     this.currentPosition = position;
+  }
+
+  reach(gripperPosition: Point, gripperAlignmentAngle: number): void {
+    const desiredPosition = this.inverseKinematicsCalculator.getRobotPosition(
+      gripperPosition, new Point(0,0,0),gripperAlignmentAngle
+    );
+    this.setPosition(desiredPosition);
   }
 
   moveLift(distance: number): void {
