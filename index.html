@@ -13,11 +13,12 @@
     <div class="firstForm">
       <form id="forward-kin-form">
         <h3>Forward kinematics control</h3>
-        Swing rotation: <input type="number" name="swing"><br>
-        Elbow rotation: <input type="number" name="elbow"><br>
-        Wrist rotation: <input type="number" name="wrist"><br>
+        Swing rotation: <input type="float" name="swing"><br>
+        Elbow rotation: <input type="float" name="elbow"><br>
+        Wrist rotation: <input type="float" name="wrist"><br>
         <input type="submit" value="Submit">
       </form>
+      <div id="forward-kin-error" style="display: none;">This is the message.</div>
     </div>
     <div class="secondForm">
       <form id="reverse-kin-form">
@@ -28,6 +29,7 @@
         z: <input type="number" name="z"><br>
         <input type="submit" value="Submit">
       </form>
+      <div id="reverse-kin-error" style="display: none;">This is the message.</div>
     </div>
   </body>
 </html>

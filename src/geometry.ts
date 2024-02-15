@@ -10,10 +10,6 @@ export class Point {
   }
 
   rotateZ(angle: number, center: Point): void {
-    console.log(
-      `Rotate ${(angle * 180) / Math.PI} degrees: ${[this.x, this.y, this.z]}`
-    );
-
     const relativeX = this.x - center.x;
     const relativeY = this.y - center.y;
 
@@ -24,6 +20,10 @@ export class Point {
 
     this.x = center.x + newRelativeX;
     this.y = center.y + newRelativeY;
+  }
+
+  getAsList(): number[] {
+    return [Math.round(this.x), Math.round(this.y), Math.round(this.z)];
   }
 
   move(movement: Vector) {

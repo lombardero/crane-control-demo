@@ -122,22 +122,30 @@ export class RobotGeometryCalculator implements RobotControl {
 
   rotateSwing(angle: number) {
     this.arm.rotateZ(angle);
+    console.log(`Rotate swign ${angle}`);
+    this.getGripperCoordinates();
   }
 
   rotateElbow(angle: number) {
     this.forearm.rotateZ(angle);
+    console.log(`Rotate elbow ${angle}`);
+    this.getGripperCoordinates();
   }
 
   rotateWrist(angle: number) {
-    this.arm.rotateZ(angle);
+    this.hand.rotateZ(angle);
+    console.log(`Rotate wrist ${angle}`);
+    this.getGripperCoordinates();
   }
 
-  getGripperCoordinates() {
-    return [
-      Math.round(this.hand.end.x),
-      Math.round(this.hand.end.y),
-      Math.round(this.hand.end.z),
-    ];
+  getGripperCoordinates(): number[] {
+    // console.log(this.arm.start.getAsList());
+    // console.log(this.arm.end.getAsList());
+    // console.log(this.forearm.start.getAsList());
+    // console.log(this.forearm.end.getAsList());
+    // console.log(this.hand.start.getAsList());
+    // console.log(this.hand.end.getAsList());
+    return this.hand.end.getAsList();
   }
 }
 

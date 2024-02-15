@@ -2,29 +2,17 @@ import { Point } from "./geometry";
 import { RobotPosition } from "./robot_controller";
 import { RobotGeometry } from "./robot_geometry";
 
-// class RobotPosition = {
-//   liftDistance: number;
-//   swingRotation: number;
-//   elbowRotation: number;
-//   wristRotation: number;
-
-//   constructor(
-//     liftDistance: number,
-//     swingRotation: number,
-//     elbowRotation: number,
-//     wristRotation: number
-//   ) {
-//     this.liftDistance = liftDistance;
-//     this.swingRotation = swingRotation;
-//     this.elbowRotation = elbowRotation;
-//     this.wristRotation = wristRotation;
-//   }
-// };
-
 class ImpossiblePositionError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "ImpossiblePositionError";
+  }
+}
+
+class UnreachablePositionError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "UnreachablePositionError";
   }
 }
 
@@ -57,41 +45,83 @@ export class InverseKinematicsCalculator implements InverseKinematics {
       gripperPosition.z
     );
 
-    const desiredSwingToWristDistance =
-      swingPosition.getDistance(desiredWristPosition);
+    console.log(
+      `Desired wrist ${[
+        desiredWristPosition.x,
+        desiredWristPosition.y,
+        desiredWristPosition.z,
+      ]}`
+    );
+    console.log(
+      `Swing position ${[swingPosition.x, swingPosition.y, swingPosition.z]}`
+    );
+    const desiredSwingToWristDistanceXY = Math.sqrt(
+      (swingPosition.x - desiredWristPosition.x) ** 2 +
+        (swingPosition.y - desiredWristPosition.y) ** 2
+    );
+    swingPosition.getDistance(desiredWristPosition);
 
-    if (desiredWristPosition.x != 0) {
-      var wristPositionSwingAngle = Math.acos(
-        desiredSwingToWristDistance / desiredWristPosition.x
-      );
-    } else if (desiredWristPosition.y != 0) {
-      var wristPositionSwingAngle = Math.asin(
-        desiredSwingToWristDistance / desiredWristPosition.y
-      );
-    } else {
-      throw new ImpossiblePositionError("Wrist can't be swing axis");
+    const wristPositionSwingAngle = Math.atan(
+      desiredWristPosition.x / desiredWristPosition.y
+    );
+
+    if (
+      desiredSwingToWristDistanceXY >
+      this.geometry.swingToElbow + this.geometry.elbowToWrist
+    ) {
+      throw new UnreachablePositionError("The desired position is too far!");
     }
+
+    // if (desiredWristPosition.x != 0) {
+    //   var wristPositionSwingAngle = Math.acos(
+    //     desiredSwingToWristDistance / desiredWristPosition.x
+    //   );
+    // } else if (desiredWristPosition.y != 0) {
+    //   console.log("Not zerooo");
+    //   var wristPositionSwingAngle = Math.asin(
+    //     desiredSwingToWristDistance / desiredWristPosition.y
+    //   );
+    //   console.log(desiredSwingToWristDistance);
+    //   console.log(desiredWristPosition.y);
+    // } else {
+    //   throw new ImpossiblePositionError("Wrist can't be swing axis");
+    // }
 
     // Compute angle required between arm & forearm to match distance
     // Resolved with basic trigonometry
-
     const additionalSwingAngle = Math.acos(
-      (desiredSwingToWristDistance ** 2 +
+      (desiredSwingToWristDistanceXY ** 2 +
         this.geometry.swingToElbow ** 2 -
         this.geometry.elbowToWrist ** 2) /
-        (2 * this.geometry.elbowToWrist * desiredSwingToWristDistance)
+        (2 * this.geometry.elbowToWrist * desiredSwingToWristDistanceXY)
     );
+    console.log(
+      `Desired swing angle to wrist ${
+        (wristPositionSwingAngle * 180) / Math.PI
+      }`
+    );
+    // if (desiredWristPosition.y < 0) {
+    //   wristPositionSwingAngle = 180 - wristPositionSwingAngle;
+    // }
+    console.log(
+      `Desired swing angle to wrist (corrected) ${
+        (wristPositionSwingAngle * 180) / Math.PI
+      }`
+    );
+    console.log(`Additional swing ${(additionalSwingAngle * 180) / Math.PI}`);
     const additionalWristAngle = Math.acos(
-      (desiredSwingToWristDistance ** 2 +
+      (desiredSwingToWristDistanceXY ** 2 +
         this.geometry.elbowToWrist ** 2 -
         this.geometry.swingToElbow ** 2) /
-        (2 * this.geometry.swingToElbow * desiredSwingToWristDistance)
+        (2 * this.geometry.swingToElbow * desiredSwingToWristDistanceXY)
     );
 
-    const swingDesiredAngle = wristPositionSwingAngle + additionalSwingAngle;
-    const elbowDesiredAngle =
-      Math.PI - additionalSwingAngle - additionalWristAngle;
-    const forearmAlignmentAngle = swingDesiredAngle + elbowDesiredAngle;
+    var swingDesiredAngle = wristPositionSwingAngle + additionalSwingAngle;
+    if (desiredWristPosition.y < 0) {
+      swingDesiredAngle += Math.PI;
+    }
+    const elbowDesiredAngle = -(additionalSwingAngle + additionalWristAngle);
+    const forearmAlignmentAngle = -(swingDesiredAngle + elbowDesiredAngle);
 
     return new RobotPosition(
       0,

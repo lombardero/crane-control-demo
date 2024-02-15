@@ -3,7 +3,7 @@ import { RobotGeometry } from "./robot_geometry";
 import { RobotController } from "./robot_controller";
 import { RobotInputController } from "./input_parser";
 
-export function configLoader(): RobotInputController {
+export function loadConfig(): RobotInputController {
   const robotGeometry = loadRobotGeometryFromConfig();
   return new RobotInputController(new RobotController(robotGeometry));
 }
