@@ -71,7 +71,7 @@ class FormController {
 
   displayErrorForm(message: string): void {
     this.errorDisplay.style.display = "block";
-    this.errorDisplay.textContent = message;
+    this.errorDisplay.textContent = "❌ " + message;
   }
 
   hideErrorForm(): void {

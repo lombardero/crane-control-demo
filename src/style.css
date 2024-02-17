@@ -13,16 +13,81 @@ html {
   overflow-x: hidden;
 }
 
-.firstForm {
+.firstForm,
+.secondForm {
   position: absolute;
+  width: 300px;
   top: 10px;
   right: 10px;
-  background-color: white;
+  background-color: #cbcbeb;
+  padding: 10px;
+  border: 1px;
+  border-radius: 10px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.firstForm {
+  top: 10px;
+  background-color: #b3b3dc;
 }
 
 .secondForm {
-  position: absolute;
-  top: 140px;
-  right: 10px;
-  background-color: white;
+  top: 270px;
+  background-color: #b3b3dc;
+  color: black;
+}
+
+.firstForm input[type="float"],
+.firstForm input[type="number"],
+.secondForm input[type="number"] {
+  /* position: absolute; */
+  border-radius: 5px;
+  width: 100px;
+  /* flex: 1; */
+  padding: 2px;
+  margin: 2px;
+  /* margin-right: 10px; */
+  border: 1px solid black;
+  box-sizing: border-box;
+}
+
+.firstForm input[type="submit"],
+.secondForm input[type="submit"] {
+  width: 130px;
+  height: 26px;
+  padding: 3px;
+  margin: 2px;
+  border-radius: 13px;
+  font-size: 16px;
+  border: 1px;
+}
+
+.firstForm input[type="submit"],
+.secondForm input[type="submit"] {
+  background-color: #3333a2;
+  color: white;
+}
+
+.firstForm input[type="submit"]:active,
+.secondForm input[type="submit"]:active {
+  background-color: #6666b9;
+  color: white;
+}
+
+.secondForm input[type="number"] {
+  border-radius: 5px;
+  width: 100px;
+  /* flex: 1; */
+  padding: 2px;
+  margin-right: 10px;
+  border: 1px solid black;
+  box-sizing: border-box;
+}
+
+.errorDisplay {
+  background-color: rgb(225, 127, 127);
+  padding: 4px;
+  margin-top: 6px;
+  border-radius: 5px;
+  font-size: 16px;
 }

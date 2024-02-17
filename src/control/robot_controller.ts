@@ -60,6 +60,7 @@ class RobotController
   implements RobotForwardInstructions, RobotInverseInstructions, RobotControl
 {
   currentPosition: RobotPosition;
+  previousPosition: RobotPosition;
   geometryCalculator: RobotPositionCalculator;
   inverseKinematicsCalculator: InverseKinematicsCalculator;
   render: RobotRender;
@@ -67,6 +68,7 @@ class RobotController
 
   constructor(geometry: RobotGeometry) {
     this.currentPosition = new RobotPosition();
+    this.previousPosition = this.currentPosition;
     this.geometryCalculator =
       RobotPositionCalculator.loadFromGeometry(geometry);
     this.inverseKinematicsCalculator = new InverseKinematicsCalculator(
@@ -80,12 +82,16 @@ class RobotController
       position,
       this.currentPosition
     );
-
     this.moveLift(deltaPosition.lift);
     this.rotateSwing(deltaPosition.swing);
     this.rotateElbow(deltaPosition.elbow);
     this.rotateWrist(deltaPosition.wrist);
+    this.previousPosition = this.currentPosition;
     this.currentPosition = position;
+  }
+
+  revertToPreviousPosition(): void {
+    this.setPosition(this.previousPosition);
   }
 
   reach(gripperPosition: Point, gripperAlignmentAngle: number): void {
