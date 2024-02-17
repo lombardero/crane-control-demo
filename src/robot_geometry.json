@@ -1,7 +1,7 @@
 {
     "axis_distances": {
         "swing_to_elbow": 100,
-        "elbow_to_wrist": 100,
+        "elbow_to_wrist": 80,
         "wrist_to_gripper": 20
     },
     "geometry": {

@@ -69,17 +69,29 @@ export class InverseKinematicsCalculator implements InverseKinematics {
     }
     // Resolved with basic trigonometry
     const additionalSwingAngle = Math.acos(
-      (desiredSwingToWristDistanceXY ** 2 +
-        this.geometry.swingToElbow ** 2 -
+      (desiredSwingToWristDistanceXY ** 2 -
+        this.geometry.elbowToWrist ** 2 +
+        this.geometry.swingToElbow ** 2) /
+        (2 * this.geometry.swingToElbow * desiredSwingToWristDistanceXY)
+    );
+
+    console.log(
+      `Additionla swing angle: ${(additionalSwingAngle * 180) / Math.PI}`
+    );
+
+    const additionalWristAngle = Math.acos(
+      (desiredSwingToWristDistanceXY ** 2 -
+        this.geometry.swingToElbow ** 2 +
         this.geometry.elbowToWrist ** 2) /
         (2 * this.geometry.elbowToWrist * desiredSwingToWristDistanceXY)
     );
 
-    const additionalWristAngle = Math.acos(
-      (desiredSwingToWristDistanceXY ** 2 +
-        this.geometry.elbowToWrist ** 2 -
-        this.geometry.swingToElbow ** 2) /
-        (2 * this.geometry.swingToElbow * desiredSwingToWristDistanceXY)
+    console.log(
+      `Additionla wrist angle: ${(additionalWristAngle * 180) / Math.PI}`
+    );
+
+    console.log(
+      `wrist position Swing angle: ${(wristPositionSwingAngle * 180) / Math.PI}`
     );
 
     var swingDesiredAngle = wristPositionSwingAngle + additionalSwingAngle;
