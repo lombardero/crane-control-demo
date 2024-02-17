@@ -1,4 +1,4 @@
-export class Point {
+class Point {
   x: number;
   y: number;
   z: number;
@@ -46,7 +46,7 @@ export class Point {
     );
   }
 }
-export class Vector extends Point {
+class Vector extends Point {
   getMagnitude(): number {
     return Math.sqrt(this.x ** 2 + this.y ** 2 + this.z ** 2);
   }
@@ -78,3 +78,5 @@ export class Vector extends Point {
     return Math.acos(dotProduct / (magnitude1 * magnitude2));
   }
 }
+
+export { Point, Vector };

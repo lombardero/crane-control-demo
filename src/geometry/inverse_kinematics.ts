@@ -1,5 +1,5 @@
 import { Point } from "./geometry";
-import { RobotPosition } from "../robot_controller";
+import { RobotPosition } from "../control/robot_controller";
 import { RobotGeometry } from "./robot_geometry";
 
 class UnreachablePositionError extends Error {
@@ -24,7 +24,7 @@ interface InverseKinematics {
   ): RobotPosition;
 }
 
-export class InverseKinematicsCalculator implements InverseKinematics {
+class InverseKinematicsCalculator implements InverseKinematics {
   geometry: RobotGeometry;
 
   constructor(robotGeometry: RobotGeometry) {
@@ -109,3 +109,5 @@ export class InverseKinematicsCalculator implements InverseKinematics {
     );
   }
 }
+
+export { InverseKinematicsCalculator };

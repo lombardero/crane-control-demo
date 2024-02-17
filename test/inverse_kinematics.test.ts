@@ -31,7 +31,6 @@ describe("RobotGeometryCalculator", () => {
     );
     expect(position.swing).toBeCloseTo(-Math.PI / 4 + Math.acos(40 / 50));
     expect(position.elbow).toBeCloseTo(-2 * Math.acos(40 / 50));
-    // expect(position.wrist).toBeCloseTo(Math.acos(40 / 50));
   });
 
   it("should compute the position correctly for different lengths", () => {

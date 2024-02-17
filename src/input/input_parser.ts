@@ -1,9 +1,9 @@
-import { RobotController, RobotPosition } from "./robot_controller";
-import { Point } from "./geometry/geometry";
+import { RobotController, RobotPosition } from "../control/robot_controller";
+import { Point } from "../geometry/geometry";
 
 type FormCallable = (formInput: number[]) => void;
 
-export class FormController {
+class FormController {
   form: HTMLFormElement;
   errorDisplay: HTMLElement;
   formInput: HTMLInputElement[];
@@ -88,7 +88,7 @@ export class FormController {
   }
 }
 
-export class RobotInputController {
+class RobotInputController {
   robotController: RobotController;
   forwardForm: FormController;
   reverseForm: FormController;
@@ -166,3 +166,5 @@ export class RobotInputController {
     this.reverseForm.listenUserInput();
   }
 }
+
+export { RobotInputController };

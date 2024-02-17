@@ -1,5 +1,5 @@
 import { Point, Vector } from "./geometry";
-import { RobotControl } from "../robot_controller";
+import { RobotControl } from "../control/robot_controller";
 
 class RobotGeometry {
   swingToElbow: number;

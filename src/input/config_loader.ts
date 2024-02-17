@@ -1,9 +1,9 @@
-import * as config from "./robot_geometry.json";
-import { RobotGeometry } from "./geometry/robot_geometry";
-import { RobotController } from "./robot_controller";
+import * as config from "../robot_geometry.json";
+import { RobotGeometry } from "../geometry/robot_geometry";
+import { RobotController } from "../control/robot_controller";
 import { RobotInputController } from "./input_parser";
 
-export function loadConfig(): RobotInputController {
+function loadConfig(): RobotInputController {
   const robotGeometry = loadRobotGeometryFromConfig();
   return new RobotInputController(new RobotController(robotGeometry));
 }
@@ -18,3 +18,5 @@ function loadRobotGeometryFromConfig(): RobotGeometry {
     config.geometry.torso.min_height
   );
 }
+
+export { loadConfig };

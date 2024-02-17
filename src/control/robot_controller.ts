@@ -1,12 +1,14 @@
 import {
   RobotGeometry,
   RobotPositionCalculator,
-} from "./geometry/robot_geometry";
-import { RobotRender } from "./robot_renderer";
-import { InverseKinematicsCalculator } from "./geometry/inverse_kinematics";
-import { Point } from "./geometry/geometry";
+} from "../geometry/robot_geometry";
+import { RobotRender } from "../render/robot_renderer";
+import { InverseKinematicsCalculator } from "../geometry/inverse_kinematics";
+import { Point } from "../geometry/geometry";
 
 export interface RobotControl {
+  // Instruction with delta positions.
+
   moveLift(distance: number): void;
 
   rotateSwing(angle: number): void;
@@ -16,7 +18,8 @@ export interface RobotControl {
   rotateWrist(angle: number): void;
 }
 
-export class RobotPosition {
+class RobotPosition {
+  // Instruction with absolute positions.
   lift: number;
   swing: number;
   elbow: number;
@@ -49,17 +52,18 @@ interface RobotForwardInstructions {
   setPosition(positiom: RobotPosition): void;
 }
 
-interface RobotReverseInstructions {
+interface RobotInverseInstructions {
   reach(gripperPosition: Point, gripperAlignmentAngle: number): void;
 }
 
-export class RobotController
-  implements RobotForwardInstructions, RobotReverseInstructions
+class RobotController
+  implements RobotForwardInstructions, RobotInverseInstructions, RobotControl
 {
   currentPosition: RobotPosition;
   geometryCalculator: RobotPositionCalculator;
   inverseKinematicsCalculator: InverseKinematicsCalculator;
   render: RobotRender;
+  // TODO: add actual robot proxy to instruct movement.
 
   constructor(geometry: RobotGeometry) {
     this.currentPosition = new RobotPosition();
@@ -113,3 +117,5 @@ export class RobotController
     this.render.rotateWrist(angle);
   }
 }
+
+export { RobotPosition, RobotController };
