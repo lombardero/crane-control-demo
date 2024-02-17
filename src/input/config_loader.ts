@@ -1,11 +1,18 @@
 import * as config from "../robot_geometry.json";
 import { RobotGeometry } from "../geometry/robot_geometry";
-import { RobotController } from "../control/robot_controller";
+import {
+  RobotController,
+  RobotPositionRange,
+  PositionRange,
+} from "../control/robot_controller";
 import { RobotInputController } from "./input_parser";
 
 function loadConfig(): RobotInputController {
   const robotGeometry = loadRobotGeometryFromConfig();
-  return new RobotInputController(new RobotController(robotGeometry));
+  const robotPositionRange = loadRobotRangeFromConfig();
+  return new RobotInputController(
+    new RobotController(robotGeometry, robotPositionRange)
+  );
 }
 
 function loadRobotGeometryFromConfig(): RobotGeometry {
@@ -16,6 +23,15 @@ function loadRobotGeometryFromConfig(): RobotGeometry {
     config.geometry.width,
     config.geometry.torso.height,
     config.geometry.torso.min_height
+  );
+}
+
+function loadRobotRangeFromConfig(): RobotPositionRange {
+  return new RobotPositionRange(
+    new PositionRange(
+      config.movement_ranges.lift.min,
+      config.movement_ranges.lift.max
+    )
   );
 }
 

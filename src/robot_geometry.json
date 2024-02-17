@@ -10,5 +10,11 @@
             "min_height": 100
         },
         "width": 20
+    },
+    "movement_ranges": {
+        "lift": {
+            "min": 0,
+            "max": 200
+        }
     }
 }

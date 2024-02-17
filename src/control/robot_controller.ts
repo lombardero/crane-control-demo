@@ -18,6 +18,27 @@ export interface RobotControl {
   rotateWrist(angle: number): void;
 }
 
+class RobotPositionOutOfRangeError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "RobotMovementOutOfRangeError";
+  }
+}
+
+class PositionRange {
+  min: number;
+  max: number;
+
+  constructor(min: number, max: number) {
+    this.min = min;
+    this.max = max;
+  }
+
+  isInsideRange(position: number): boolean {
+    return position >= this.min && position <= this.max;
+  }
+}
+
 class RobotPosition {
   // Instruction with absolute positions.
   lift: number;
@@ -35,7 +56,13 @@ class RobotPosition {
     this.swing = swing;
     this.elbow = elbow;
     this.wrist = wrist;
-    console.log(`New position ${[lift, swing, elbow, wrist]}`);
+    console.log(`New robot position created: ${[lift, swing, elbow, wrist]}`);
+  }
+
+  toString(): string {
+    return `l:${this.lift}, s:${(this.swing / Math.PI) * 180}, e:${
+      (this.elbow / Math.PI) * 180
+    }, w:${(this.wrist / Math.PI) * 180}`;
   }
 
   static subtract(first: RobotPosition, second: RobotPosition) {
@@ -45,6 +72,19 @@ class RobotPosition {
       first.elbow - second.elbow,
       first.wrist - second.wrist
     );
+  }
+}
+
+class RobotPositionRange {
+  // Instruction with absolute positions.
+  lift: PositionRange;
+
+  constructor(lift: PositionRange) {
+    this.lift = lift;
+  }
+
+  isInRange(position: RobotPosition): boolean {
+    return this.lift.isInsideRange(position.lift);
   }
 }
 
@@ -61,14 +101,19 @@ class RobotController
 {
   currentPosition: RobotPosition;
   previousPosition: RobotPosition;
+  positionRange: RobotPositionRange | null;
   geometryCalculator: RobotPositionCalculator;
   inverseKinematicsCalculator: InverseKinematicsCalculator;
   render: RobotRender;
   // TODO: add actual robot proxy to instruct movement.
 
-  constructor(geometry: RobotGeometry) {
+  constructor(
+    geometry: RobotGeometry,
+    positionRange: RobotPositionRange | null = null
+  ) {
     this.currentPosition = new RobotPosition();
     this.previousPosition = this.currentPosition;
+    this.positionRange = positionRange;
     this.geometryCalculator =
       RobotPositionCalculator.loadFromGeometry(geometry);
     this.inverseKinematicsCalculator = new InverseKinematicsCalculator(
@@ -82,16 +127,17 @@ class RobotController
       position,
       this.currentPosition
     );
+    if (this.positionRange != null && !this.positionRange.isInRange(position)) {
+      throw new RobotPositionOutOfRangeError(
+        `Can't execute instruction, positon out of range!`
+      );
+    }
     this.moveLift(deltaPosition.lift);
     this.rotateSwing(deltaPosition.swing);
     this.rotateElbow(deltaPosition.elbow);
     this.rotateWrist(deltaPosition.wrist);
     this.previousPosition = this.currentPosition;
     this.currentPosition = position;
-  }
-
-  revertToPreviousPosition(): void {
-    this.setPosition(this.previousPosition);
   }
 
   reach(gripperPosition: Point, gripperAlignmentAngle: number): void {
@@ -124,4 +170,4 @@ class RobotController
   }
 }
 
-export { RobotPosition, RobotController };
+export { RobotPosition, RobotController, RobotPositionRange, PositionRange };
