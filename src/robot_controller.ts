@@ -32,6 +32,7 @@ export class RobotPosition {
     this.swing = swing;
     this.elbow = elbow;
     this.wrist = wrist;
+    console.log(`New position ${[lift, swing, elbow, wrist]}`);
   }
 
   static subtract(first: RobotPosition, second: RobotPosition) {

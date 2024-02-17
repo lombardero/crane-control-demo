@@ -90,7 +90,7 @@ export class InverseKinematicsCalculator implements InverseKinematics {
     const forearmAlignmentAngle = -(swingDesiredAngle + elbowDesiredAngle);
 
     return new RobotPosition(
-      0,
+      gripperPosition.z - this.geometry.minHeight + 2 * this.geometry.thickness,
       swingDesiredAngle,
       elbowDesiredAngle,
       forearmAlignmentAngle + gripperAlignmentAngle

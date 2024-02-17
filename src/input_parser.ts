@@ -99,23 +99,25 @@ export class RobotInputController {
     this.forwardForm = new FormController(
       "forward-kin-form",
       "forward-kin-error",
-      ["swing", "elbow", "wrist"],
-      [0, 0, 0]
+      ["lift", "swing", "elbow", "wrist"],
+      [0, 0, 0, 0]
     );
     this.reverseForm = new FormController(
       "reverse-kin-form",
       "reverse-kin-error",
       ["x", "y", "z"],
-      [0, 0, 0]
+      this.robotController.geometryCalculator.getGripperCoordinates()
     );
 
     // Pass action done by the form
     this.forwardForm.onFormSubmit((formInput: number[]) => {
       // Parse input
+      const liftPosition = formInput.shift();
+      console.log(`Lift shift ${liftPosition}`);
       const formInRadians = formInput.map(
         (valueInDegrees) => (valueInDegrees / 180) * Math.PI
       );
-      const newPosition = new RobotPosition(0, ...formInRadians);
+      const newPosition = new RobotPosition(liftPosition, ...formInRadians);
       // Move robot
       try {
         this.robotController.setPosition(newPosition);
@@ -151,6 +153,7 @@ export class RobotInputController {
 
       // Update mirror form
       this.forwardForm.setCurrentValues([
+        this.robotController.currentPosition.lift,
         (this.robotController.currentPosition.swing * 180) / Math.PI,
         (this.robotController.currentPosition.elbow * 180) / Math.PI,
         (this.robotController.currentPosition.wrist * 180) / Math.PI,

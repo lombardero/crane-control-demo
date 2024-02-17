@@ -170,6 +170,7 @@ class RobotPositionCalculator implements RobotControl {
   }
 
   getGripperCoordinates(): number[] {
+    console.log(`Current gripper: ${this.hand.end.getAsList()}`);
     return this.hand.end.getAsList();
   }
 }
