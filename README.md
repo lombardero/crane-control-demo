@@ -28,7 +28,7 @@ The user interface allows the user to control the robot in two manners:
 1. "Forwards" kinematics. This means directly inputting the actual movements of the moving parts. This can be useful to display the robot in 3D after receving the telemetry data. The UI then displays the position of the gripper relative to the swing. That position is then editable via the inverse kinematics form.
 2. Inverse kinematics. The user adds a desired position for thre gripper, and the UI computes the position required by the robotic arm and applies it.
 
-> :information_source: Currently, the inverse kinematics uses a simple trigonometric function to derive the position of the arm.
+> :information_source: Currently, the inverse kinematics uses a [simple trigonometric function](/assets/inverse-kin-calc.jpg) to derive the position of the arm.
 
 ## Running
 
