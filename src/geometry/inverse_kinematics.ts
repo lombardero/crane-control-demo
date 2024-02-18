@@ -16,6 +16,13 @@ class ClashingPositionError extends Error {
   }
 }
 
+class ImpossiblePositionError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ImpossiblePositionError";
+  }
+}
+
 interface InverseKinematics {
   getRobotPosition(
     gripperPosition: Point,
@@ -86,13 +93,11 @@ class InverseKinematicsCalculator implements InverseKinematics {
         (2 * this.geometry.elbowToWrist * desiredSwingToWristDistanceXY)
     );
 
-    console.log(
-      `Additionla wrist angle: ${(additionalWristAngle * 180) / Math.PI}`
-    );
-
-    console.log(
-      `wrist position Swing angle: ${(wristPositionSwingAngle * 180) / Math.PI}`
-    );
+    if (isNaN(additionalSwingAngle) || isNaN(additionalSwingAngle)) {
+      throw new ImpossiblePositionError(
+        "Robot geometry does not support this position!"
+      );
+    }
 
     var swingDesiredAngle = wristPositionSwingAngle + additionalSwingAngle;
     if (desiredWristPosition.y < 0) {

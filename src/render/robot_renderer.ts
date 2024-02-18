@@ -50,7 +50,7 @@ export class RobotRender implements RobotControl {
       geometry.minHeight - 2 * geometry.thickness
     );
 
-    const material = new THREE.MeshNormalMaterial();
+    const material = new THREE.MeshPhysicalMaterial({ color: 0x005588 });
 
     this.swing = new THREE.Object3D();
     this.elbow = new THREE.Object3D();

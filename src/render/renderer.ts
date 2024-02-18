@@ -2,15 +2,55 @@ import * as THREE from "three";
 import "../style.css";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { RobotRender } from "./robot_renderer";
+import {
+  RectAreaLightHelper,
+  RectAreaLightUniformsLib,
+} from "three/examples/jsm/Addons.js";
 
 interface WindowSize {
   width: number;
   height: number;
 }
 
+function setGroundFloor(): THREE.Mesh {
+  const groundFloor = new THREE.PlaneGeometry(600, 600, 1, 1);
+  const groundMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0xdddddd,
+    roughness: 0.5,
+  });
+  const groundMesh = new THREE.Mesh(groundFloor, groundMaterial);
+  return groundMesh;
+}
+
+function setLighting(): THREE.Light[] {
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+
+  const rectLight = new THREE.RectAreaLight(0xffffff, 20, 200, 200);
+  rectLight.lookAt(0, 0, 0);
+  rectLight.position.set(0, 600, 0);
+  rectLight.rotation.set(-Math.PI / 2, 0, 0);
+  rectLight.castShadow = true;
+
+  return [ambientLight, rectLight];
+}
+
 export function setScene(robotRender: RobotRender): THREE.Scene {
   const scene = new THREE.Scene();
-  scene.add(robotRender.getRender());
+
+  const group = new THREE.Group();
+  group.add(robotRender.getRender());
+  group.add(setGroundFloor());
+
+  // Correct positioning for readable display
+  group.rotateX(-Math.PI / 2);
+  group.translateY(-200);
+  scene.add(group);
+
+  const lights = setLighting();
+
+  lights.map((light) => {
+    scene.add(light);
+  });
 
   return scene;
 }
@@ -26,7 +66,8 @@ function setCamera(
     10,
     5000
   );
-  cam.position.x = 1000;
+  cam.position.x = 700;
+  cam.position.y = 700;
   scene.add(cam);
 
   return cam;
