@@ -82,10 +82,6 @@ class InverseKinematicsCalculator implements InverseKinematics {
         (2 * this.geometry.swingToElbow * desiredSwingToWristDistanceXY)
     );
 
-    console.log(
-      `Additionla swing angle: ${(additionalSwingAngle * 180) / Math.PI}`
-    );
-
     const additionalWristAngle = Math.acos(
       (desiredSwingToWristDistanceXY ** 2 -
         this.geometry.swingToElbow ** 2 +
