@@ -113,7 +113,6 @@ class RobotInputController {
     this.forwardForm.onFormSubmit((formInput: number[]) => {
       // Parse input
       const liftPosition = formInput.shift();
-      console.log(`Lift shift ${liftPosition}`);
       const formInRadians = formInput.map(
         (valueInDegrees) => (valueInDegrees / 180) * Math.PI
       );

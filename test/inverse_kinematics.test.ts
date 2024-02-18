@@ -49,7 +49,6 @@ describe("RobotGeometryCalculator", () => {
       new Point(0, 0, 0)
     );
 
-    console.log([position.swing]);
     expect(position.swing).toBeCloseTo(Math.PI / 6);
     expect(position.elbow).toBeCloseTo(-Math.PI + (Math.PI / 4 + Math.PI / 3));
   });

@@ -46,7 +46,6 @@ describe("RobotGeometryCalculator", () => {
   });
 
   it("should rotate all components correctly", () => {
-    console.log("START");
     robotPositionCalculator.rotateSwing(Math.PI / 4);
     robotPositionCalculator.rotateElbow(-Math.PI / 2);
     robotPositionCalculator.rotateWrist(Math.PI / 4);

@@ -2,10 +2,6 @@ import * as THREE from "three";
 import "../style.css";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { RobotRender } from "./robot_renderer";
-import {
-  RectAreaLightHelper,
-  RectAreaLightUniformsLib,
-} from "three/examples/jsm/Addons.js";
 
 interface WindowSize {
   width: number;
@@ -24,19 +20,17 @@ function setGroundFloor(): THREE.Mesh {
 
 function setLighting(): THREE.Light[] {
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-
-  const rectLight = new THREE.RectAreaLight(0xffffff, 20, 200, 200);
+  const rectLight = new THREE.RectAreaLight(0xffffff, 100, 200, 200);
   rectLight.lookAt(0, 0, 0);
-  rectLight.position.set(0, 600, 0);
+  rectLight.position.set(0, 1500, 0);
   rectLight.rotation.set(-Math.PI / 2, 0, 0);
   rectLight.castShadow = true;
-
   return [ambientLight, rectLight];
 }
 
 export function setScene(robotRender: RobotRender): THREE.Scene {
+  // Add robot & ground floor
   const scene = new THREE.Scene();
-
   const group = new THREE.Group();
   group.add(robotRender.getRender());
   group.add(setGroundFloor());
@@ -46,8 +40,8 @@ export function setScene(robotRender: RobotRender): THREE.Scene {
   group.translateY(-200);
   scene.add(group);
 
+  // Add lighting
   const lights = setLighting();
-
   lights.map((light) => {
     scene.add(light);
   });
@@ -59,7 +53,6 @@ function setCamera(
   scene: THREE.Scene,
   sizes: WindowSize
 ): THREE.PerspectiveCamera {
-  // Camera
   const cam = new THREE.PerspectiveCamera(
     45,
     sizes.width / sizes.height,

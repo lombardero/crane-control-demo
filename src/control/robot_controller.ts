@@ -76,7 +76,7 @@ class RobotPosition {
 }
 
 class RobotPositionRange {
-  // Instruction with absolute positions.
+  // Allowed ranges.
   lift: PositionRange;
 
   constructor(lift: PositionRange) {
@@ -97,6 +97,7 @@ interface RobotInverseInstructions {
 }
 
 class RobotController
+  // Robot orchestrator controlling geometry and render.
   implements RobotForwardInstructions, RobotInverseInstructions, RobotControl
 {
   currentPosition: RobotPosition;
